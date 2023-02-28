@@ -41,9 +41,9 @@ class _SplashScreenState extends State<SplashScreen> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text('Zi',style: GoogleFonts.frederickaTheGreat(color:Colors.white,fontSize: 70,fontWeight: FontWeight.w500),),
-                  const SizedBox(width:20),
-                  Text('n',style: GoogleFonts.frederickaTheGreat(color:Colors.white,fontSize: 70,fontWeight: FontWeight.bold),),
                   const SizedBox(width:30),
+                  Text('n',style: GoogleFonts.frederickaTheGreat(color:Colors.white,fontSize: 70,fontWeight: FontWeight.w500),),
+                  const SizedBox(width:25),
                   Text('g',style: GoogleFonts.frederickaTheGreat(color:Colors.white,fontSize: 70,fontWeight: FontWeight.w500),),
                 ],
               ),
@@ -61,7 +61,7 @@ class _SplashScreenState extends State<SplashScreen> {
 }
 
 Future<void> goToHome(context) async {
-  Timer(const Duration(seconds: 2), (() {
+  Timer(const Duration(seconds: 5), (() {
     Navigator.pushReplacement(
         context,
         MaterialPageRoute(

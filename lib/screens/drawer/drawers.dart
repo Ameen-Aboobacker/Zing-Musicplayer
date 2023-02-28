@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:music_app/screens/drawer/drawer_about_us.dart';
 import 'package:music_app/screens/drawer/drawer_privacy.dart';
 import 'package:music_app/screens/drawer/drawer_widgets.dart';
@@ -24,6 +25,7 @@ class HomescreenDrawers extends StatelessWidget {
               width: 230,
               child: Image(image: AssetImage('assets/images/logo2.png'),),
               ),
+              Text('Zing',style: GoogleFonts.frederickaTheGreat(color:Colors.white,fontSize: 70,fontWeight: FontWeight.w500),),
           Column(children: [
             DrawerContent(
               drawername: 'About Us ',
