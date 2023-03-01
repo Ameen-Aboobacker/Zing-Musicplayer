@@ -23,7 +23,7 @@ class _HomeScreenState extends State<HomeScreen> {
   final OnAudioQuery _audioQuery = OnAudioQuery();
   List<SongModel> allSongs = [];
 
-  // int counter = 0;
+  int counter = 0;
 
   @override
   void initState() {
