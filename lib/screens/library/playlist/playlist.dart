@@ -3,6 +3,8 @@ import 'package:hive_flutter/adapters.dart';
 import 'package:music_app/db/functions/favorite_db.dart';
 import 'package:music_app/db/functions/playlist_db.dart';
 import 'package:music_app/db/model/muzic_model.dart';
+import 'package:music_app/screens/homescreen/home_screen.dart';
+import 'package:music_app/screens/library/playlist/create_playlist.dart';
 import 'package:music_app/screens/library/playlist/list_of_playlist.dart';
 import 'package:music_app/screens/miniplayer/mini_player.dart';
 import 'package:on_audio_query/on_audio_query.dart';
@@ -26,6 +28,8 @@ class _PlaylistScreenState extends State<PlaylistScreen> {
   void initState() {
     super.initState();
   }
+
+  final play = Hive.box<MuzicModel>('playlistDb');
 
   @override
   Widget build(BuildContext context) {
@@ -57,7 +61,7 @@ class _PlaylistScreenState extends State<PlaylistScreen> {
             floatingActionButton: FloatingActionButton(
               onPressed: () {
                 nameController.clear();
-                newplaylist(context, _formKey);
+                newplaylist(context, _formKey, nameController);
               },
               backgroundColor: const Color.fromARGB(255, 5, 64, 141),
               child: const Icon(
@@ -72,8 +76,7 @@ class _PlaylistScreenState extends State<PlaylistScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     const SizedBox(height: 20),
-                      
-                    Hive.box<MuzicModel>('playlistDb').isEmpty
+                    play.isEmpty
                         ? Padding(
                             padding: const EdgeInsets.symmetric(
                                 vertical: 100, horizontal: 50),
@@ -122,123 +125,12 @@ class _PlaylistScreenState extends State<PlaylistScreen> {
       ),
     );
   }
+}
 
-  Future newplaylist(BuildContext context, formKey) {
-    return showDialog(
-      context: context,
-      builder: (ctx) => SimpleDialog(
-        shape: const RoundedRectangleBorder(
-            borderRadius: BorderRadius.all(Radius.circular(15))),
-        backgroundColor: const Color.fromARGB(255, 45, 98, 243),
-        children: [
-          const SimpleDialogOption(
-            child: Text(
-              'New to Playlist',
-              style: TextStyle(
-                  fontFamily: 'UbuntuCondensed',
-                  color: Color.fromARGB(255, 255, 255, 255),
-                  fontSize: 18,
-                  fontWeight: FontWeight.w600),
-            ),
-          ),
-          const SizedBox(
-            height: 8,
-          ),
-          SimpleDialogOption(
-            child: Form(
-              key: formKey,
-              child: TextFormField(
-                controller: nameController,
-                maxLength: 15,
-                decoration: InputDecoration(
-                    fillColor: Colors.white.withOpacity(0.7),
-                    filled: true,
-                    border: OutlineInputBorder(
-                        borderSide: BorderSide.none,
-                        borderRadius: BorderRadius.circular(30)),
-                    contentPadding: const EdgeInsets.only(left: 15, top: 5)),
-                style: const TextStyle(
-                    fontFamily: 'UbuntuCondensed',
-                    color: Color.fromARGB(255, 0, 0, 0),
-                    fontSize: 16,
-                    fontWeight: FontWeight.w600),
-              ),
-            ),
-          ),
-          const SizedBox(
-            height: 8,
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              SimpleDialogOption(
-                onPressed: () {
-                  Navigator.of(context).pop();
-                  nameController.clear();
-                },
-                child: const Text(
-                  'Cancel',
-                  style: TextStyle(
-                      fontFamily: 'UbuntuCondensed',
-                      color: Color.fromARGB(255, 255, 255, 255),
-                      fontSize: 16,
-                      fontWeight: FontWeight.w600),
-                ),
-              ),
-              SimpleDialogOption(
-                onPressed: () {
-                  if (_formKey.currentState!.validate()) {
-                    createPlaylist(context);
-                  }
-                },
-                child: const Text(
-                  'Create',
-                  style: TextStyle(
-                      fontFamily: 'UbuntuCondensed',
-                      color: Color.fromARGB(255, 255, 255, 255),
-                      fontSize: 16,
-                      fontWeight: FontWeight.w600),
-                ),
-              ),
-            ],
-          ),
-        ],
-      ),
-    );
-  }
-
-  Future<void> createPlaylist(context) async {
-    final name = nameController.text.trim();
-    final music = MuzicModel(name: name, songId: []);
-
-    final datas =
-        PlaylistDb.playlistDb.values.map((e) => e.name.trim()).toList();
-    if (name.isEmpty) {
-      return;
-    } else if (datas.contains(music.name)) {
-      const snackbar3 = SnackBar(
-          duration: Duration(milliseconds: 750),
-          backgroundColor: Colors.black,
-          content: Text(
-            'playlist already exist',
-            style: TextStyle(color: Colors.white),
-          ));
-      ScaffoldMessenger.of(context).showSnackBar(snackbar3);
-      Navigator.of(context).pop();
-    } else {
-      PlaylistDb.addPlaylist(music);
-      const snackbar4 = SnackBar(
-          duration: Duration(milliseconds: 750),
-          backgroundColor: Colors.black,
-          content: Text(
-            'playlist created successfully',
-            style: TextStyle(
-              color: Colors.white,
-              fontSize: 15,
-            ),
-          ));
-      ScaffoldMessenger.of(context).showSnackBar(snackbar4);
-      Navigator.of(context).pop();
-    }
-  }
+Future newplaylist(BuildContext context, formKey, nameController) {
+  return showDialog(
+    context: context,
+    builder: (ctx) =>
+        CreatePlaylist(formKey: formKey, nameController: nameController),
+  );
 }
